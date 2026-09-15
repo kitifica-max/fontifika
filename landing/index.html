@@ -616,7 +616,9 @@
       font-size: 10px;
       color: var(--secondary);
       font-family: var(--font-mono);
-      margin-left: 6px;
+      margin-left: 8px;
+      padding-left: 8px;
+      border-left: 1px solid var(--border);
       opacity: .6;
       transition: opacity .2s;
       pointer-events: none;
@@ -1716,7 +1718,7 @@
   function updateCounter(event) {
     document.querySelectorAll(`[data-event="${event}"]`).forEach(btn => {
       const badge = ensureBadge(btn);
-      badge.textContent = copyStats[event] || 0;
+      badge.textContent = ' ' + (copyStats[event] || 0);
       badge.classList.add('visible');
     });
   }
@@ -1729,7 +1731,7 @@
       document.querySelectorAll('[data-event]').forEach(btn => {
         const event = btn.dataset.event;
         const badge = ensureBadge(btn);
-        badge.textContent = copyStats[event] || 0;
+        badge.textContent = ' ' + (copyStats[event] || 0);
         badge.classList.add('visible');
       });
     } catch (e) {}
