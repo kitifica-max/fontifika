@@ -612,6 +612,35 @@
     .copy-cmd:hover { border-color: #3f3f46; color: var(--bright); }
     .copy-cmd.copied { border-color: var(--accent-border); color: var(--accent); }
 
+    .copy-count {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      margin-left: 6px;
+      opacity: 0;
+      transition: opacity .2s;
+      pointer-events: none;
+    }
+
+    .copy-count.visible { opacity: 1; }
+
+    .copy-url-btn {
+      position: relative;
+    }
+
+    .copy-url-btn .copy-count {
+      position: absolute;
+      top: -8px;
+      right: -4px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 5px;
+      font-size: 9px;
+      line-height: 16px;
+      height: 16px;
+    }
+
     /* ── FOOTER ── */
     footer {
       border-top: 1px solid var(--border);
@@ -1430,6 +1459,7 @@
   let currentFont = null;
   let embedCache = {};
   let activeEmbedTab = 'link';
+  let copyStats = {};
 
   const loadedFonts = new Set();
 
@@ -1663,11 +1693,43 @@
 
   function track(event) {
     if (!event) return;
+    copyStats[event] = (copyStats[event] || 0) + 1;
+    updateCounter(event);
     fetch(`${API}/track`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ event }),
     }).catch(() => {});
+  }
+
+  function updateCounter(event) {
+    const count = copyStats[event];
+    if (!count) return;
+    document.querySelectorAll(`[data-event="${event}"] .copy-count`).forEach(el => {
+      el.textContent = count;
+      el.classList.add('visible');
+    });
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API}/stats`);
+      const data = await res.json();
+      copyStats = data.counts || {};
+      document.querySelectorAll('[data-event]').forEach(btn => {
+        const event = btn.dataset.event;
+        const count = copyStats[event];
+        if (!count) return;
+        let badge = btn.querySelector('.copy-count');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.className = 'copy-count';
+          btn.appendChild(badge);
+        }
+        badge.textContent = count;
+        badge.classList.add('visible');
+      });
+    } catch (e) {}
   }
 
   function esc(s) {
@@ -1681,6 +1743,7 @@
   // ── BOOT ──
   document.addEventListener('DOMContentLoaded', () => {
     init();
+    loadStats();
 
     // Search
     document.getElementById('search').addEventListener('input', e => {
