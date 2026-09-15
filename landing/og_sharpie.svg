@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="60%" stop-color="#09090b" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#09090b" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#09090b"/>
+
+  <g stroke="#1f1f22" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <rect width="1200" height="630" fill="url(#fade)"/>
+
+  <circle cx="72" cy="72" r="5" fill="#10b981"/>
+
+  <text x="680" y="160" font-family="Georgia, serif" font-size="90" font-weight="700" fill="#ffffff" opacity="0.04">Satoshi</text>
+  <text x="720" y="265" font-family="Georgia, serif" font-size="80" font-weight="700" fill="#ffffff" opacity="0.05" font-style="italic">Zodiak</text>
+  <text x="660" y="355" font-family="Georgia, serif" font-size="70" font-weight="700" fill="#ffffff" opacity="0.04">Cabinet</text>
+
+  <text x="72" y="345" font-family="Sharpie Extrabold, Sharpie, serif" font-size="130" font-weight="800" fill="#ffffff" letter-spacing="-4">Fontifika</text>
+
+  <rect x="72" y="360" width="120" height="3" fill="#10b981" rx="2"/>
+
+  <text x="72" y="418" font-family="system-ui, sans-serif" font-size="22" font-weight="400" fill="#71717a" letter-spacing="0.3">100 fuentes Fontshare · MCP Server · Claude Skill</text>
+
+  <rect x="72" y="488" width="100" height="32" rx="8" fill="#18181b" stroke="#1f1f22" stroke-width="1"/>
+  <text x="122" y="509" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#a1a1aa" text-anchor="middle">Variable</text>
+
+  <rect x="184" y="488" width="100" height="32" rx="8" fill="#18181b" stroke="#1f1f22" stroke-width="1"/>
+  <text x="234" y="509" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#a1a1aa" text-anchor="middle">Free · OFL</text>
+
+  <rect x="296" y="488" width="112" height="32" rx="8" fill="#111b17" stroke="#10b981" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="352" y="509" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#10b981" text-anchor="middle">kitifica.com</text>
+
+  <text x="1128" y="572" font-family="system-ui, sans-serif" font-size="14" font-weight="400" fill="#3f3f46" text-anchor="end">fontifika.kitifica.com</text>
+</svg>

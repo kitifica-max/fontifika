@@ -6,6 +6,10 @@ import {
   buildEmbedSnippet,
   buildEmbedUrl,
 } from "./catalog.ts";
+import { createClient } from "jsr:@supabase/supabase-js@2";
+
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
+const SUPABASE_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -167,13 +171,17 @@ async function handleCss(slug: string, url: URL): Promise<Response> {
   }
 }
 
-// ── Copy counter (Deno KV) ────────────────────────────────────────────────────
+// ── Copy counter (Supabase DB) ────────────────────────────────────────────────
 
 const ALLOWED_EVENTS = new Set([
   "skill_curl", "skill_example", "skill_manual_mkdir", "skill_manual_url",
   "mcp_url", "mcp_claude_ai", "mcp_claude_code",
   "mcp_cursor", "mcp_windsurf", "mcp_zed",
 ]);
+
+function getSupabase() {
+  return createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 async function handleTrack(req: Request): Promise<Response> {
   let event: string;
@@ -185,20 +193,31 @@ async function handleTrack(req: Request): Promise<Response> {
   }
   if (!ALLOWED_EVENTS.has(event)) return err("Unknown event", 400);
 
-  const kv = await Deno.openKv();
-  await kv.atomic()
-    .mutate({ type: "sum", key: ["copies", event], value: new Deno.KvU64(1n) })
-    .commit();
+  const sb = getSupabase();
 
-  return json({ ok: true, event });
+  const { data: existing } = await sb
+    .from("copy_counts")
+    .select("count")
+    .eq("event", event)
+    .single();
+
+  const newCount = (existing?.count ?? 0) + 1;
+
+  if (existing) {
+    await sb.from("copy_counts").update({ count: newCount }).eq("event", event);
+  } else {
+    await sb.from("copy_counts").insert({ event, count: newCount });
+  }
+
+  return json({ ok: true, event, count: newCount });
 }
 
 async function handleStats(): Promise<Response> {
-  const kv = await Deno.openKv();
+  const sb = getSupabase();
+  const { data } = await sb.from("copy_counts").select("event, count");
   const counts: Record<string, number> = {};
-  for await (const entry of kv.list<Deno.KvU64>({ prefix: ["copies"] })) {
-    const key = entry.key[1] as string;
-    counts[key] = Number(entry.value.value);
+  for (const row of data ?? []) {
+    counts[row.event] = row.count;
   }
   return json({ counts });
 }
