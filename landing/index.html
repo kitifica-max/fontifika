@@ -8,8 +8,12 @@
   <meta property="og:title" content="Fontifika — Fontshare fonts para AI">
   <meta property="og:description" content="100 fuentes Fontshare. Busca, previsualiza y embebe desde cualquier AI assistant.">
   <meta property="og:type" content="website">
-  <!-- Sharpie for logo wordmark + showcase fonts -->
-  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=sharpie@400,700,800&f[]=satoshi@300,400,500,700&f[]=clash-display@400,500,600&f[]=general-sans@400,500,600&display=swap">
+  <meta property="og:image" content="https://fontifika.kitifica.com/og.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://fontifika.kitifica.com/og.svg">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <!-- Sharpie for logo wordmark · Clash Display for headings -->
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=sharpie@400,700,800&f[]=clash-display@300,400,500,600,700&f[]=satoshi@300,400,500,700&f[]=general-sans@400,500,600&display=swap">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -384,7 +388,7 @@
     }
 
     .hero-title {
-      font-family: 'Sharpie', sans-serif;
+      font-family: 'Clash Display', sans-serif;
       font-size: clamp(36px, 5vw, 72px);
       font-weight: 700;
       color: var(--bright);
@@ -450,9 +454,9 @@
     }
 
     .section-title {
-      font-family: 'Sharpie', sans-serif;
+      font-family: 'Clash Display', sans-serif;
       font-size: clamp(28px, 4vw, 48px);
-      font-weight: 700;
+      font-weight: 600;
       color: var(--bright);
       letter-spacing: -1px;
       line-height: 1.1;
@@ -625,15 +629,37 @@
     }
 
     .footer-brand {
-      font-family: 'Sharpie', sans-serif;
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .footer-brand strong {
-      color: var(--secondary);
+    .footer-kitifica-logo {
+      height: 18px;
+      width: auto;
+      opacity: 0.45;
+      transition: opacity .15s;
     }
+
+    .footer-kitifica-logo:hover { opacity: 0.7; }
+
+    .footer-brand-sep {
+      color: var(--border);
+      font-size: 14px;
+    }
+
+    .footer-brand-text {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-brand-text a {
+      color: inherit;
+      transition: color .15s;
+    }
+
+    .footer-brand-text a:hover { color: var(--secondary); }
 
     .footer-links {
       display: flex;
@@ -1336,7 +1362,11 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <strong>Fontifika</strong> — un producto de Kitifica · Fuentes por <a href="https://fontshare.com" target="_blank" rel="noopener" style="color:inherit">Fontshare</a>
+      <a href="https://kitifica.com" target="_blank" rel="noopener">
+        <img src="/logo_kitifica.svg" alt="Kitifica" class="footer-kitifica-logo">
+      </a>
+      <span class="footer-brand-sep">/</span>
+      <span class="footer-brand-text">Fuentes por <a href="https://fontshare.com" target="_blank" rel="noopener">Fontshare</a></span>
     </div>
     <div class="footer-links">
       <a href="https://fontshare.com" target="_blank" rel="noopener" class="footer-link">Fontshare</a>

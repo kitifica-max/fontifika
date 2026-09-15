@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style>
+      @import url('https://api.fontshare.com/v2/css?f[]=sharpie@700,800&amp;f[]=clash-display@400,600&amp;display=swap');
+    </style>
+    <linearGradient id="gridGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#09090b" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#09090b" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#09090b"/>
+
+  <!-- Subtle grid lines -->
+  <g stroke="#1f1f22" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+    <line x1="200" y1="0" x2="200" y2="630"/>
+    <line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Gradient overlay to fade grid at bottom -->
+  <rect width="1200" height="630" fill="url(#gridGrad)"/>
+
+  <!-- Accent dot top-left -->
+  <circle cx="72" cy="72" r="5" fill="#10b981"/>
+
+  <!-- Font specimens top right area (decorative) -->
+  <text x="680" y="160" font-family="'Clash Display', sans-serif" font-size="90" font-weight="600" fill="#ffffff" opacity="0.04" text-anchor="start">Satoshi</text>
+  <text x="720" y="260" font-family="'Clash Display', sans-serif" font-size="80" font-weight="600" fill="#ffffff" opacity="0.05" text-anchor="start" font-style="italic">Zodiak</text>
+  <text x="660" y="350" font-family="'Clash Display', sans-serif" font-size="70" font-weight="600" fill="#ffffff" opacity="0.04" text-anchor="start">Cabinet</text>
+
+  <!-- Main wordmark -->
+  <text x="72" y="340" font-family="'Sharpie', 'Georgia', serif" font-size="130" font-weight="800" fill="#ffffff" letter-spacing="-4">Fontifika</text>
+
+  <!-- Green accent line under wordmark -->
+  <rect x="72" y="356" width="120" height="3" fill="#10b981" rx="2"/>
+
+  <!-- Tagline -->
+  <text x="72" y="415" font-family="'Clash Display', 'Arial', sans-serif" font-size="24" font-weight="400" fill="#71717a" letter-spacing="0.5">100 fuentes Fontshare · MCP Server · Claude Skill</text>
+
+  <!-- Bottom badges -->
+  <rect x="72" y="490" width="100" height="32" rx="8" fill="#18181b" stroke="#1f1f22" stroke-width="1"/>
+  <text x="122" y="511" font-family="'Clash Display', 'Arial', sans-serif" font-size="12" font-weight="500" fill="#a1a1aa" text-anchor="middle">Variable</text>
+
+  <rect x="184" y="490" width="100" height="32" rx="8" fill="#18181b" stroke="#1f1f22" stroke-width="1"/>
+  <text x="234" y="511" font-family="'Clash Display', 'Arial', sans-serif" font-size="12" font-weight="500" fill="#a1a1aa" text-anchor="middle">Free · OFL</text>
+
+  <rect x="296" y="490" width="100" height="32" rx="8" fill="#111b17" stroke="#10b981" stroke-width="1" stroke-opacity="0.4"/>
+  <text x="346" y="511" font-family="'Clash Display', 'Arial', sans-serif" font-size="12" font-weight="500" fill="#10b981" text-anchor="middle">kitifica.com</text>
+
+  <!-- URL bottom right -->
+  <text x="1128" y="571" font-family="'Clash Display', 'Arial', sans-serif" font-size="14" font-weight="400" fill="#3f3f46" text-anchor="end">fontifika.kitifica.com</text>
+</svg>
