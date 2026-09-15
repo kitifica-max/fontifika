@@ -1141,7 +1141,7 @@
           <div class="step-text">Descarga el Skill con un solo comando:</div>
           <div class="code-wrap">
             <code>mkdir -p ~/.claude/skills/fontifika && curl -o ~/.claude/skills/fontifika/SKILL.md https://fontifika.kitifica.com/SKILL.md</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="skill_curl">Copiar</button>
           </div>
         </div>
       </div>
@@ -1157,7 +1157,7 @@
           <div class="step-text">Úsalo con lenguaje natural — o escribe <strong>/fontifika</strong> para invocarlo directamente.</div>
           <div class="code-wrap">
             <code>necesito una fuente sans-serif para una app SaaS</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="skill_example">Copiar</button>
           </div>
         </div>
       </div>
@@ -1171,7 +1171,7 @@
           <div class="step-text">Crea la carpeta del Skill:</div>
           <div class="code-wrap">
             <code>mkdir -p ~/.claude/skills/fontifika</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="skill_manual_mkdir">Copiar</button>
           </div>
         </div>
       </div>
@@ -1181,7 +1181,7 @@
           <div class="step-text">Descarga el archivo <strong>SKILL.md</strong> y colócalo en esa carpeta:</div>
           <div class="code-wrap">
             <code>https://fontifika.kitifica.com/SKILL.md</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="skill_manual_url">Copiar</button>
           </div>
         </div>
       </div>
@@ -1208,7 +1208,7 @@
         <div class="mcp-url-label">URL del servidor MCP</div>
         <div class="mcp-url-value">https://thnmfysiwxtksehagara.supabase.co/functions/v1/api/mcp</div>
       </div>
-      <button class="copy-url-btn" id="copy-mcp-url">Copiar</button>
+      <button class="copy-url-btn" id="copy-mcp-url" data-event="mcp_url">Copiar</button>
     </div>
 
     <div class="i-tabs">
@@ -1240,7 +1240,7 @@
           <div class="step-text">Pega la URL y guarda — sin terminal, sin configuración extra.</div>
           <div class="code-wrap">
             <code>https://thnmfysiwxtksehagara.supabase.co/functions/v1/api/mcp</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="mcp_claude_ai">Copiar</button>
           </div>
         </div>
       </div>
@@ -1254,7 +1254,7 @@
           <div class="step-text">Ejecuta en terminal:</div>
           <div class="code-wrap">
             <code>claude mcp add fontifika --transport http https://thnmfysiwxtksehagara.supabase.co/functions/v1/api/mcp</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="mcp_claude_code">Copiar</button>
           </div>
         </div>
       </div>
@@ -1280,7 +1280,7 @@
           <div class="step-text">Haz clic en <strong>Add server</strong>, tipo <strong>HTTP</strong>, y pega:</div>
           <div class="code-wrap">
             <code>https://thnmfysiwxtksehagara.supabase.co/functions/v1/api/mcp</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="mcp_cursor">Copiar</button>
           </div>
         </div>
       </div>
@@ -1306,7 +1306,7 @@
     }
   }
 }</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="mcp_windsurf">Copiar</button>
           </div>
         </div>
       </div>
@@ -1349,7 +1349,7 @@
     }
   }
 }</code>
-            <button class="copy-cmd">Copiar</button>
+            <button class="copy-cmd" data-event="mcp_zed">Copiar</button>
           </div>
         </div>
       </div>
@@ -1661,6 +1661,15 @@
     });
   }
 
+  function track(event) {
+    if (!event) return;
+    fetch(`${API}/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event }),
+    }).catch(() => {});
+  }
+
   function esc(s) {
     return String(s)
       .replace(/&/g, '&amp;')
@@ -1745,12 +1754,14 @@
     document.querySelectorAll('.copy-cmd').forEach(btn => {
       btn.addEventListener('click', () => {
         const code = btn.previousElementSibling;
+        track(btn.dataset.event);
         copyText(code.textContent, btn);
       });
     });
 
     // Copy MCP URL
     document.getElementById('copy-mcp-url').addEventListener('click', function() {
+      track(this.dataset.event);
       copyText(MCP_URL, this);
     });
   });

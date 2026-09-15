@@ -167,6 +167,42 @@ async function handleCss(slug: string, url: URL): Promise<Response> {
   }
 }
 
+// ── Copy counter (Deno KV) ────────────────────────────────────────────────────
+
+const ALLOWED_EVENTS = new Set([
+  "skill_curl", "skill_example", "skill_manual_mkdir", "skill_manual_url",
+  "mcp_url", "mcp_claude_ai", "mcp_claude_code",
+  "mcp_cursor", "mcp_windsurf", "mcp_zed",
+]);
+
+async function handleTrack(req: Request): Promise<Response> {
+  let event: string;
+  try {
+    const body = await req.json();
+    event = String(body?.event ?? "");
+  } catch {
+    return err("Invalid JSON", 400);
+  }
+  if (!ALLOWED_EVENTS.has(event)) return err("Unknown event", 400);
+
+  const kv = await Deno.openKv();
+  await kv.atomic()
+    .mutate({ type: "sum", key: ["copies", event], value: new Deno.KvU64(1n) })
+    .commit();
+
+  return json({ ok: true, event });
+}
+
+async function handleStats(): Promise<Response> {
+  const kv = await Deno.openKv();
+  const counts: Record<string, number> = {};
+  for await (const entry of kv.list<Deno.KvU64>({ prefix: ["copies"] })) {
+    const key = entry.key[1] as string;
+    counts[key] = Number(entry.value.value);
+  }
+  return json({ counts });
+}
+
 // ── Router ────────────────────────────────────────────────────────────────────
 
 Deno.serve(async (req: Request) => {
@@ -181,6 +217,16 @@ Deno.serve(async (req: Request) => {
   // POST /api/mcp
   if (path === "/mcp" && req.method === "POST") {
     return handleMcp(req);
+  }
+
+  // POST /api/track
+  if (path === "/track" && req.method === "POST") {
+    return handleTrack(req);
+  }
+
+  // GET /api/stats
+  if (path === "/stats" && req.method === "GET") {
+    return handleStats();
   }
 
   // GET /api/search?q=&limit=
