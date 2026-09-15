@@ -5,6 +5,8 @@ import {
   listCategories,
   buildEmbedSnippet,
   buildEmbedUrl,
+  suggestPairs,
+  PAIRS,
 } from "./catalog.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -76,6 +78,18 @@ const MCP_TOOLS = [
     description: "List all available font categories",
     inputSchema: { type: "object", properties: {} },
   },
+  {
+    name: "suggest_pairs",
+    description: "Suggest curated font pairs (heading + body) for a given use case or vibe",
+    inputSchema: {
+      type: "object",
+      properties: {
+        use_case: { type: "string", description: "Use case or vibe, e.g. 'editorial', 'tech startup', 'fashion', 'blog'" },
+        limit: { type: "number", description: "Max pairs to return (default 3)" },
+      },
+      required: ["use_case"],
+    },
+  },
 ];
 
 function handleMcpTool(name: string, args: Record<string, unknown>): unknown {
@@ -99,6 +113,22 @@ function handleMcpTool(name: string, args: Record<string, unknown>): unknown {
     }
     case "list_categories":
       return { categories: listCategories() };
+    case "suggest_pairs": {
+      const pairs = suggestPairs(String(args.use_case ?? ""), Number(args.limit ?? 3));
+      return {
+        pairs: pairs.map(pair => {
+          const hFont = getFont(pair.heading);
+          const bFont = getFont(pair.body);
+          return {
+            ...pair,
+            heading_font: hFont ?? null,
+            body_font: bFont ?? null,
+            heading_embed: hFont ? buildEmbedSnippet(hFont, [400, 700]) : null,
+            body_embed: bFont ? buildEmbedSnippet(bFont, [400]) : null,
+          };
+        }),
+      };
+    }
     default:
       return { error: `Unknown tool: ${name}` };
   }
@@ -256,6 +286,24 @@ Deno.serve(async (req: Request) => {
       slug, name, category, weights, is_variable,
     }));
     return json({ results });
+  }
+
+  // GET /api/pairs?q=&limit=
+  if (path === "/pairs") {
+    const q = url.searchParams.get("q") ?? url.searchParams.get("use_case") ?? "";
+    const limit = Math.min(Number(url.searchParams.get("limit") ?? 3), 10);
+    const pairs = suggestPairs(q, limit).map(pair => {
+      const hFont = getFont(pair.heading);
+      const bFont = getFont(pair.body);
+      return {
+        ...pair,
+        heading_font: hFont ?? null,
+        body_font: bFont ?? null,
+        heading_embed: hFont ? buildEmbedSnippet(hFont, [400, 700]) : null,
+        body_embed: bFont ? buildEmbedSnippet(bFont, [400]) : null,
+      };
+    });
+    return json({ pairs, total: pairs.length });
   }
 
   // GET /api/list?category=

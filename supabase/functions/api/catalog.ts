@@ -138,6 +138,51 @@ export function buildEmbedUrl(slug: string, weights: number[]): string {
   return `https://api.fontshare.com/v2/css?f[]=${slug}@${w}&display=swap`;
 }
 
+export interface FontPair {
+  id: string;
+  heading: string;
+  body: string;
+  vibe: string;
+  use_cases: string[];
+  description: string;
+}
+
+export const PAIRS: FontPair[] = [
+  { id: "editorial-classic", heading: "zodiak", body: "satoshi", vibe: "Editorial clásico", use_cases: ["editorial", "magazine", "blog", "periodico", "news", "articulo"], description: "Serif elegante para titulares, sans neutro para cuerpo" },
+  { id: "editorial-modern", heading: "sentient", body: "general-sans", vibe: "Editorial moderno", use_cases: ["editorial", "revista", "magazine", "cultural"], description: "Serif contemporáneo con humanista versátil" },
+  { id: "editorial-bold", heading: "boska", body: "switzer", vibe: "Editorial audaz", use_cases: ["editorial", "magazine", "feature", "portada"], description: "Serif expresivo con grotesque limpio" },
+  { id: "tech-sharp", heading: "clash-display", body: "satoshi", vibe: "Tech sharp", use_cases: ["saas", "tech", "startup", "app", "software", "producto", "landing"], description: "Display impactante con body neutral para SaaS/tech" },
+  { id: "tech-mono", heading: "space-grotesk", body: "switzer", vibe: "Tech geométrico", use_cases: ["tech", "developer", "herramienta", "tool", "dev", "codigo"], description: "Geométrico técnico para productos de código" },
+  { id: "tech-minimal", heading: "supreme", body: "general-sans", vibe: "Tech minimal", use_cases: ["saas", "startup", "minimal", "clean", "simple"], description: "Sans condensado + humanista sin fricciones" },
+  { id: "fashion-luxury", heading: "stardom", body: "satoshi", vibe: "Fashion luxury", use_cases: ["fashion", "moda", "lujo", "luxury", "marca", "brand"], description: "Display de moda con sans contemporáneo" },
+  { id: "fashion-modern", heading: "bevellier", body: "general-sans", vibe: "Fashion contemporáneo", use_cases: ["fashion", "moda", "editorial", "e-commerce", "tienda"], description: "Display elegante con humanista legible" },
+  { id: "branding-bold", heading: "panchang", body: "cabinet-grotesk", vibe: "Branding bold", use_cases: ["branding", "marca", "brand", "identidad", "identity", "logo"], description: "Sans expresivo + grotesque versátil para marca fuerte" },
+  { id: "branding-clean", heading: "clash-grotesk", body: "satoshi", vibe: "Branding limpio", use_cases: ["branding", "marca", "brand", "startup", "agencia", "agency"], description: "Grotesque sistemático para branding moderno" },
+  { id: "blog-readable", heading: "erode", body: "satoshi", vibe: "Blog legible", use_cases: ["blog", "articulo", "content", "contenido", "largo", "lectura", "read"], description: "Serif humanista con sans para lectura larga" },
+  { id: "blog-literary", heading: "gambetta", body: "general-sans", vibe: "Blog literario", use_cases: ["blog", "escritura", "literatura", "book", "libro", "ensayo"], description: "Serif literario con humanista para prosa" },
+  { id: "portfolio-creative", heading: "sharpie", body: "switzer", vibe: "Portfolio creativo", use_cases: ["portfolio", "portafolio", "creative", "creativo", "diseño", "design"], description: "Display expresivo para portafolio de diseño" },
+  { id: "portfolio-minimal", heading: "nippo", body: "general-sans", vibe: "Portfolio minimal", use_cases: ["portfolio", "portafolio", "minimal", "clean", "personal"], description: "Display geométrico con sans legible" },
+  { id: "dev-docs", heading: "azeret-mono", body: "general-sans", vibe: "Dev / Docs", use_cases: ["developer", "dev", "docs", "documentacion", "documentacion", "codigo", "code", "technical"], description: "Mono para headings técnicos con humanista para prosa" },
+  { id: "marketing-landing", heading: "cabinet-grotesk", body: "satoshi", vibe: "Marketing / Landing", use_cases: ["marketing", "landing", "campaña", "campaign", "conversion", "ventas", "sales"], description: "Grotesque expresivo + body limpio para conversión" },
+  { id: "health-wellness", heading: "sentient", body: "switzer", vibe: "Salud / Bienestar", use_cases: ["salud", "health", "wellness", "bienestar", "medico", "clinic", "farmacia"], description: "Serif cálido con sans accesible" },
+  { id: "education-content", heading: "epilogue", body: "outfit", vibe: "Educación / Contenido", use_cases: ["educacion", "education", "curso", "course", "aprendizaje", "learning", "escuela", "school"], description: "Sans humanista claro para contextos educativos" },
+  { id: "fintech-trust", heading: "switzer", body: "tabular", vibe: "Fintech / Confianza", use_cases: ["fintech", "finanzas", "finance", "banco", "bank", "datos", "data", "tabla"], description: "Grotesque sistemático + tabular para datos financieros" },
+  { id: "playful-fun", heading: "chillax", body: "general-sans", vibe: "Playful / Fun", use_cases: ["infantil", "kids", "divertido", "playful", "fun", "juego", "game", "creativo"], description: "Sans redondeado amigable para contextos lúdicos" },
+];
+
+export function suggestPairs(query: string, limit = 3): FontPair[] {
+  const q = query.toLowerCase().trim();
+  if (!q) return PAIRS.slice(0, limit);
+  const scored = PAIRS.map(p => {
+    let score = 0;
+    if (p.vibe.toLowerCase().includes(q)) score += 3;
+    if (p.use_cases.some(u => u.includes(q))) score += 2;
+    if (p.description.toLowerCase().includes(q)) score += 1;
+    return { p, score };
+  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+  return (scored.length ? scored : PAIRS.map(p => ({ p, score: 0 }))).slice(0, limit).map(x => x.p);
+}
+
 export function buildEmbedSnippet(font: Font, weights: number[]) {
   const effectiveWeights = weights.length ? weights : [400];
   const embedUrl = buildEmbedUrl(font.slug, effectiveWeights);
