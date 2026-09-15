@@ -614,10 +614,10 @@
 
     .copy-count {
       font-size: 10px;
-      color: var(--muted);
+      color: var(--secondary);
       font-family: var(--font-mono);
       margin-left: 6px;
-      opacity: 0;
+      opacity: .6;
       transition: opacity .2s;
       pointer-events: none;
     }
@@ -632,13 +632,14 @@
       position: absolute;
       top: -8px;
       right: -4px;
-      background: var(--bg);
+      background: #1a1a1d;
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0 5px;
       font-size: 9px;
       line-height: 16px;
       height: 16px;
+      opacity: 1;
     }
 
     /* ── FOOTER ── */
@@ -1702,12 +1703,21 @@
     }).catch(() => {});
   }
 
+  function ensureBadge(btn) {
+    let badge = btn.querySelector('.copy-count');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'copy-count';
+      btn.appendChild(badge);
+    }
+    return badge;
+  }
+
   function updateCounter(event) {
-    const count = copyStats[event];
-    if (!count) return;
-    document.querySelectorAll(`[data-event="${event}"] .copy-count`).forEach(el => {
-      el.textContent = count;
-      el.classList.add('visible');
+    document.querySelectorAll(`[data-event="${event}"]`).forEach(btn => {
+      const badge = ensureBadge(btn);
+      badge.textContent = copyStats[event] || 0;
+      badge.classList.add('visible');
     });
   }
 
@@ -1718,15 +1728,8 @@
       copyStats = data.counts || {};
       document.querySelectorAll('[data-event]').forEach(btn => {
         const event = btn.dataset.event;
-        const count = copyStats[event];
-        if (!count) return;
-        let badge = btn.querySelector('.copy-count');
-        if (!badge) {
-          badge = document.createElement('span');
-          badge.className = 'copy-count';
-          btn.appendChild(badge);
-        }
-        badge.textContent = count;
+        const badge = ensureBadge(btn);
+        badge.textContent = copyStats[event] || 0;
         badge.classList.add('visible');
       });
     } catch (e) {}
